@@ -4,10 +4,12 @@ init -990 python in mas_submod_utils:
         author="geneTechnician",
         name="Drink coffee with Monika",
         description="A submod that let's you ask Monika if she will drink some coffee with you!",
-        version="1.1.1",
+        version="1.1.2",
         dependencies={},
         settings_pane=None,
-        version_updates={}
+        version_updates={
+            "geneTechnician_drink_coffee_with_monika_1_1_1": "geneTechnician_drink_coffee_with_monika_1_1_2"
+        }
     )
 
 # Register the updater
@@ -17,8 +19,8 @@ init -989 python:
             submod="Drink coffee with Monika",
             user_name="geneTechnician",
             repository_name="drink-coffee-with-monika",
-            submod_dir="/Submods",
-            extraction_depth=2
+            submod_dir="/Submods/GT's interact with Monika pack",
+            extraction_depth=3
         )
 
 init python:
@@ -81,29 +83,29 @@ label monika_drink_coffee:
         else:
             if persistent.amount_of_coffees > 0:
                 if datetime.datetime.now() > persistent.amount_of_coffees_time + datetime.timedelta(hours=9):
-                    $ persistent._has_coffee = False
                     jump drink_coffee_refresh
                     
                 else:
-                    if persistent.amount_of_coffees >= 3:
+                    if persistent.amount_of_coffees >= 5:
                         m 2eksdla "I think we've had enough coffee for today, [mas_get_player_nickname()]."
                         m 7mksdla "Don't get me wrong,{w=0.5} I like coffee a lot,{w=0.5} but too much of it can do more harm than good."
                         m 4hkb "I guess it's true what they say:{w=0.3} there {i}can{/i} always be too much of a good thing, Ahaha!"
                         m 1eka "Don't worry, [player], I'd love to have some coffee with you tomorrow~"
 
                     else:
-                        $ persistent._has_coffee = False
                         $ persistent._has_prepared = True
+                        $ persistent._has_coffee = False
 
                         m 1etu "You want to have {i}another{/i} cup of coffee with me?"
                         if mas_globals.time_of_day_4state == "evening":
                             m 7lud "Alright, but keep in mind it's pretty late, so I don't think we should have any more after this."
                             m 7eua "I'll go prepare another pot right now.{w=1}{nw}"
-                            $ persistent.amount_of_coffees = 3
+                            $ persistent.amount_of_coffees = 5
                         else:
-                            if persistent.amount_of_coffees == 2:
+                            if persistent.amount_of_coffees == 4:
                                 m 4mub "Wow,{w=0.5} you might like coffee even more than I do..."
                             m 7hub "Alright, alright, I'll go prepare another pot right now. Ahaha!{w=1}{nw}"
+
                         jump drink_with_monika
 
             else:
@@ -131,7 +133,7 @@ label drink_coffee_refresh:
     m 1sub "Of course!"
     if mas_globals.time_of_day_4state == "evening":
         m 7lud "Keep in mind it's pretty late though, so I don't think we should have any more after this."
-        $ persistent.amount_of_coffees = 2
+        $ persistent.amount_of_coffees = 4
     else:
         m 3eub "I'll never pass up an opportunity to drink some coffee."
         m 1hublu "Especially if I get to drink it with you, [mas_get_player_nickname()]~"
@@ -144,11 +146,13 @@ label drink_coffee_refresh:
 
         "Yes.":
             $ persistent._has_prepared = True
+            $ persistent._has_coffee = False
             m 1wuo "I should probably go make some for myself before yours gets cold, then!"
             m 2eub "I'll be back in a moment.{w=1}{nw}"
 
         "No.":
             $ persistent._has_prepared = False
+            $ persistent._has_coffee = False
             m 1eub "Let's both take this opportunity to make some coffee for ourselves, then."
             m 3eua "I'll be back in a couple minutes, so you should go ahead and make yours at the same time."
             if mas_getSessionLength() >= datetime.timedelta(hours=2):
@@ -168,8 +172,8 @@ label drink_with_monika:
     call mas_transition_from_emptydesk
     if persistent._has_coffee == False:
         $ mas_consumable_coffee.prepare()
-    $ persistent.amount_of_coffees += 1
-    $ persistent.amount_of_coffees_time = datetime.datetime.now()
+    else:
+        pass
     $ monika_chr.wear_acs(gt_acs_playermug)
 
     if persistent._has_coffee == True:
@@ -233,6 +237,9 @@ label drink_together_callback:
     call mas_transition_from_emptydesk
     m 1hua "I'm back!"
     m 1ekbsu "Thank you for wanting to spend time with me like this."
+
+    $ persistent.amount_of_coffees += 1
+    $ persistent.amount_of_coffees_time = datetime.datetime.now()
 
     $ persistent._is_drinking_coffee = False
 return
