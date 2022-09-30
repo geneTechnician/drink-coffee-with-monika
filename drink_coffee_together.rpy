@@ -7,9 +7,7 @@ init -990 python in mas_submod_utils:
         version="1.1.2",
         dependencies={},
         settings_pane=None,
-        version_updates={
-            "geneTechnician_drink_coffee_with_monika_1_1_1": "geneTechnician_drink_coffee_with_monika_1_1_2"
-        }
+        version_updates={}
     )
 
 # Register the updater
