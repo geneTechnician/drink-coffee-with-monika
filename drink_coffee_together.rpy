@@ -4,7 +4,7 @@ init -990 python in mas_submod_utils:
         author="geneTechnician",
         name="Drink coffee with Monika",
         description="A submod that let's you ask Monika if she will drink some coffee with you!",
-        version="1.1.2",
+        version="1.1.1",
         dependencies={},
         settings_pane=None,
         version_updates={}
